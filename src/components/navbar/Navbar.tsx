@@ -4,7 +4,7 @@ const Navbar = () => {
   return (
     <div className="navbar">
       <div className="logo">
-        <img src="logo.svg" alt="Logo" />
+        <img src="https://dilfoods.in/wp-content/uploads/2023/04/Dil-Foods-new-logo.png" alt="Logo" />
         <span>Admin Panel</span>
       </div>
       <div className="icons">
