@@ -1,8 +1,12 @@
 import { GridColDef } from "@mui/x-data-grid";
 
+import { IoAddOutline } from "react-icons/io5";
+
 import "./users.scss";
 import DataTable from "../../src/components/datatable/DataTable";
 import { userRows } from "../../src/data";
+import { useState } from "react";
+import Add from "../../src/components/add/Add";
 
 const columns: GridColDef[] = [
   { field: "id", headerName: "ID", width: 90 },
@@ -52,13 +56,18 @@ const columns: GridColDef[] = [
   },
 ];
 const User = () => {
+  const [open, setOpen] = useState(false);
+
   return (
     <div className="users">
       <div className="info">
         <h1>Users</h1>
-        <button>Add New User</button>
+        <button onClick={() => setOpen(true)}>
+          <IoAddOutline height={20} width={20}/> New User
+        </button>
       </div>
       <DataTable slug={"users"} columns={columns} rows={userRows} />
+      {open && <Add slug="user" columns={columns} setOpen={setOpen} />}
     </div>
   );
 };
