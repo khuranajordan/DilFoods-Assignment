@@ -1,8 +1,10 @@
+import axios from "axios";
 import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
 import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
 
 import "./datatable.scss";
+import { useState } from "react";
 
 interface DataTableProps {
   slug: string;
@@ -11,10 +13,18 @@ interface DataTableProps {
 }
 
 const DataTable = ({ slug, columns, rows }: DataTableProps) => {
-  const handleDelete = (id: number) => {
-    // delete the row
-    // axios.delete(`/api/${slug}/id`)
-    console.log({ id });
+  const [loading, setLoading] = useState(false);
+
+  const handleDelete = async (id: number) => {
+    try {
+      setLoading(true);
+      slug = slug === "users" ? "userRows" : slug;
+      await axios.delete(`https://dilfoods.onrender.com/${slug}/${id}`);
+      console.log(`Row with ID ${id} deleted successfully.`);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error deleting row:", error);
+    }
   };
 
   const actionColumn: GridColDef = {
@@ -34,6 +44,10 @@ const DataTable = ({ slug, columns, rows }: DataTableProps) => {
       );
     },
   };
+
+  if (loading) {
+    <div>Loading...</div>;
+  }
   return (
     <div className="dataTable">
       <Box sx={{ height: 400, width: "100%" }}>

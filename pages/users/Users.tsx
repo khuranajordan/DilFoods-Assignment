@@ -1,15 +1,15 @@
+import axios from "axios";
+
 import { GridColDef } from "@mui/x-data-grid";
 
 import { IoAddOutline } from "react-icons/io5";
 
 import "./users.scss";
 import DataTable from "../../src/components/datatable/DataTable";
-import { userRows } from "../../src/data";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Add from "../../src/components/add/Add";
 
 const columns: GridColDef[] = [
-  { field: "id", headerName: "ID", width: 90 },
   {
     field: "img",
     headerName: "Avatar",
@@ -57,16 +57,36 @@ const columns: GridColDef[] = [
 ];
 const User = () => {
   const [open, setOpen] = useState(false);
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    axios
+      .get("https://dilfoods.onrender.com/userRows")
+      .then(function (response) {
+        setUsers(response.data);
+        setLoading(false);
+      })
+      .catch(function (error) {
+        console.log(error);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="users">
       <div className="info">
         <h1>Users</h1>
         <button onClick={() => setOpen(true)}>
-          <IoAddOutline height={20} width={20}/> New User
+          <IoAddOutline height={20} width={20} /> New User
         </button>
       </div>
-      <DataTable slug={"users"} columns={columns} rows={userRows} />
+      <DataTable slug={"users"} columns={columns} rows={users} />
       {open && <Add slug="user" columns={columns} setOpen={setOpen} />}
     </div>
   );

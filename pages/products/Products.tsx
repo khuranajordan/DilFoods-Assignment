@@ -1,15 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { GridColDef } from "@mui/x-data-grid";
 import { IoAddOutline } from "react-icons/io5";
 
 import "./products.scss";
 
-import { products } from "../../src/data";
 import DataTable from "../../src/components/datatable/DataTable";
 import Add from "../../src/components/add/Add";
+import axios from "axios";
 
 const columns: GridColDef[] = [
-  { field: "id", headerName: "ID", width: 90 },
   {
     field: "img",
     headerName: "Image",
@@ -58,6 +57,29 @@ const columns: GridColDef[] = [
 
 const Products = () => {
   const [open, setOpen] = useState(false);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    try {
+      setLoading(true);
+      axios
+        .get("https://dilfoods.onrender.com/products")
+        .then((response) => {
+          setProducts(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="products">
